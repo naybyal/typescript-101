@@ -1,2 +1,1 @@
-# typescript-101
-# typescript-101
+# TypeScript-101
