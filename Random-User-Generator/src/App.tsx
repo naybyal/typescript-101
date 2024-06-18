@@ -1,63 +1,31 @@
-interface Name {
-  title: string;
-  first: string;
-  last: string;
-}
+import { useState } from 'react';
 
-interface Picture {
-  large: string;
-  medium: string;
-  thumbnail: string;
-}
+const App = () => {
+  const [user, setUser] = useState(null);
 
-interface User {
-  name: Name;
-  email: string;
-  picture: Picture;
-}
-
-interface APIResponse {
-  results: User[];
-}
-
-const apiUrl = 'https://randomuser.me/api/';
-
-const generateBtn = document.getElementById('generate-btn') as HTMLButtonElement;
-const userDetailsDiv = document.getElementById('user-details') as HTMLDivElement;
-
-const fetchRandomUser = async () => {
-try {
-  const response = await fetch(apiUrl);
-  const data: APIResponse = await response.json();
-  const user = data.results[0];
-
-  displayUser(user);
-} catch (error) {
-  console.error('Error fetching user:', error);
-}
-};
-
-const displayUser = (user: User) => {
-userDetailsDiv.innerHTML = `
-  <h2>${user.name.title} ${user.name.first} ${user.name.last}</h2>
-  <p>Email: ${user.email}</p>
-  <img src="${user.picture.large}" alt="User Picture">
-`;
-};
-
-generateBtn.addEventListener('click', fetchRandomUser);
-
-function App() {
+  const fetchRandomUser = async () => {
+    try {
+      const response = await fetch('https://randomuser.me/api/');
+      const data = await response.json();
+      setUser(data.results[0]);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+    }
+  };
 
   return (
-    <>
+    <div>
       <h1>Random User Generator</h1>
-      <button id='generate-btn'>
-        Generate User
-      </button>
-      <div id='user-details'></div>
-    </>
-  )
-}
+      <button onClick={fetchRandomUser}>Generate User</button>
+      {user && (
+        <div>
+          <h2>{user.name.title} {user.name.first} {user.name.last}</h2>
+          <p>Email: {user.email}</p>
+          <img src={user.picture.large} alt="User Picture" />
+        </div>
+      )}
+    </div>
+  );
+};
 
-export default App
+export default App;
